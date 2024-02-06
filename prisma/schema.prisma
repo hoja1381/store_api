@@ -14,10 +14,11 @@ model User {
   id       Int     @id @default(autoincrement())
   email    String  @unique
   password String
+  isAdmin  Boolean @default(false)
   fullName String?
   address  String?
   carts    Cart[]
-  order    order[]
+  order    Order[]
 }
 
 model Product {
@@ -28,7 +29,7 @@ model Product {
   images      String?
   cover       String?
   carts       Cart[]
-  order       order[]
+  orders      Order[]
 }
 
 model Cart {
@@ -39,7 +40,7 @@ model Cart {
   products   Product[]
 }
 
-model order {
+model Order {
   id         Int       @id @default(autoincrement())
   user       User      @relation(fields: [user_id], references: [id])
   user_id    Int
