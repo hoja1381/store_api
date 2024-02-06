@@ -3,10 +3,21 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { VerifyUser } from './middleware/verify_cookie';
+import { ProductModule } from './product/product.module';
+import { ImageStorageModule } from './image/image_storage/image_storage.module';
+import { ImageController } from './image/image_providor/image.controller';
+import { ImageModule } from './image/image_providor/image.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), DatabaseModule, UserModule],
-  controllers: [],
+  imports: [
+    ConfigModule.forRoot(),
+    DatabaseModule,
+    UserModule,
+    ProductModule,
+    ImageStorageModule,
+    ImageModule,
+  ],
+  controllers: [ImageController],
   providers: [],
 })
 export class AppModule {
