@@ -11,19 +11,21 @@ export class ImageStorageService {
       fileName += '.png';
     }
     try {
-      const filePath = join(process.cwd(), 'uploads', fileName);
+      const filePath = join(process.cwd(), 'images', fileName);
       writeFileSync(filePath, file.buffer);
-      return filePath;
+      return fileName;
     } catch (err) {
+      console.log(err);
       return null;
     }
   }
 
   async delete(filePath: string) {
     try {
-      unlinkSync(filePath);
+      unlinkSync(`./images/${filePath}`);
       return true;
     } catch (err) {
+      console.log(err);
       return false;
     }
   }

@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  Param,
   ParseFilePipe,
   Post,
   Query,
@@ -13,7 +14,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageService } from './images.service';
 
 class createImageDto {
-  product_id: number;
+  productId: number;
   isCover: boolean;
 }
 
@@ -24,17 +25,18 @@ export class ImageController {
   @Post('/')
   @UseInterceptors(FileInterceptor('image'))
   async addImageToProduct(
-    @Body() body: createImageDto,
+    @Body() body: any,
     @UploadedFile(new ParseFilePipe()) image: Express.Multer.File,
   ) {
-    return await this.imageService.save(image, body.product_id, body.isCover);
+    return await this.imageService.save(
+      image,
+      +body.productId,
+      body.isCover == 'true',
+    );
   }
 
   @Delete('/:href')
-  async deleteImageFromProduct(@Query('href') imagePath: string) {
-    const result = await this.imageService.delete(imagePath);
-    if (!result) throw new BadGatewayException('couldnt delete image.');
-
-    return result;
+  async deleteImageFromProduct(@Param('href') href: string) {
+    return await this.imageService.delete(href);
   }
 }

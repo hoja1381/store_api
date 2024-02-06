@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadGatewayException,
+  BadRequestException,
+  Injectable,
+} from '@nestjs/common';
 import { DatabaseRepo } from 'src/database/database.service';
 import { ImageStorageService } from '../image_storage/Images_storage.service';
 
@@ -15,7 +19,7 @@ export class ImageService {
       throw new BadRequestException(" couldn't save the image");
 
     const dbImage = await this.databaseRepo.image.create({
-      data: { href: savedImagePath, isCover, productId: productId },
+      data: { href: savedImagePath, isCover, productId },
     });
 
     return dbImage;
@@ -23,6 +27,14 @@ export class ImageService {
 
   async delete(imagePath: string) {
     const isDeleted = await this.imagesStorageService.delete(imagePath);
-    return isDeleted;
+    if (!isDeleted) throw new BadGatewayException('couldnt delete the image!');
+
+    const imageInDb = await this.databaseRepo.image.findFirst({
+      where: { href: imagePath },
+    });
+
+    return await this.databaseRepo.image.delete({
+      where: { id: imageInDb.id },
+    });
   }
 }
