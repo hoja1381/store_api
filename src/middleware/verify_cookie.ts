@@ -7,7 +7,7 @@ export class VerifyUser implements NestMiddleware {
   constructor(private readonly userService: UserService) {}
 
   async use(req: any, res: any, next: NextFunction) {
-    const id = req.session.user.id;
+    const id = req.session.user?.id;
 
     if (!id) {
       return next();
