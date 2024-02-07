@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DatabaseRepo } from 'src/database/database.service';
 import { Prisma } from '@prisma/client';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -11,22 +15,40 @@ export class ProductService {
     if (Object.keys(data).length <= 0)
       throw new BadRequestException('data must be provided.');
 
+    const duplicateProduct = await this.databaseRepo.product.findUnique({
+      where: { name: data.name },
+    });
+    if (duplicateProduct)
+      throw new BadRequestException(
+        'there is existing product whit this name.',
+      );
+
     return await this.databaseRepo.product.create({ data: data });
   }
 
   async findAll() {
-    return await this.databaseRepo.product.findMany({
+    const products = await this.databaseRepo.product.findMany({
       include: { images: true },
     });
+
+    if (products.length <= 0)
+      throw new NotFoundException('there is no product to show.');
+
+    return products;
   }
 
   async findOne(id: number) {
     if (!id) throw new BadRequestException('id must be provided');
 
-    return await this.databaseRepo.product.findUnique({
+    const product = await this.databaseRepo.product.findUnique({
       where: { id },
       include: { images: true },
     });
+
+    if (!product)
+      throw new NotFoundException('product not found with that Id.');
+
+    return product;
   }
 
   async update(id: number, data: Prisma.ProductUpdateInput) {
@@ -35,7 +57,14 @@ export class ProductService {
 
     if (!id) throw new BadRequestException('id must be provided');
 
-    return await this.databaseRepo.product.update({ where: { id }, data });
+    try {
+      await this.databaseRepo.product.update({
+        where: { id },
+        data,
+      });
+    } catch (err) {
+      throw new NotFoundException('product not found with that id.');
+    }
   }
 
   async remove(id: number) {
