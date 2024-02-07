@@ -9,9 +9,7 @@ export class TransformBigint implements NestInterceptor {
     return next.handle().pipe(
       map((response) => {
         const res = { response };
-        console.log(res);
         const transformedRes = this._convert_bigint_tostring(res);
-        console.log(transformedRes);
         return transformedRes.response;
       }),
     );
