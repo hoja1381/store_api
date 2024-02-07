@@ -3,6 +3,7 @@ import {
   BadRequestException,
   Injectable,
 } from '@nestjs/common';
+
 import { DatabaseRepo } from 'src/database/database.service';
 import { ImageStorageService } from '../image_storage/Images_storage.service';
 
@@ -15,8 +16,18 @@ export class ImageService {
 
   async save(image: Express.Multer.File, productId: number, isCover: boolean) {
     const savedImagePath = await this.imagesStorageService.save(image);
+
     if (!savedImagePath)
       throw new BadRequestException(" couldn't save the image");
+
+    const isCoverCheck = await this.databaseRepo.image.findFirst({
+      where: { isCover: true, productId: productId },
+    });
+
+    if (isCoverCheck)
+      throw new BadRequestException(
+        'you cant upload more than one cover for each product.',
+      );
 
     const dbImage = await this.databaseRepo.image.create({
       data: { href: savedImagePath, isCover, productId },
