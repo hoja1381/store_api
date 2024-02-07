@@ -1,7 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { DatabaseRepo } from 'src/database/database.service';
-import { ImageService } from 'src/image/image_providor/images.service';
 import { Prisma } from '@prisma/client';
 import { CreateProductDto } from './dto/create-product.dto';
 
@@ -13,11 +11,7 @@ export class ProductService {
     if (Object.keys(data).length <= 0)
       throw new BadRequestException('data must be provided.');
 
-    const savedProduct = await this.databaseRepo.product.create({ data: data });
-
-    //@ts-ignore
-    savedProduct.price = savedProduct.price.toString();
-    return savedProduct;
+    return await this.databaseRepo.product.create({ data: data });
   }
 
   async findAll() {
@@ -29,14 +23,10 @@ export class ProductService {
   async findOne(id: number) {
     if (!id) throw new BadRequestException('id must be provided');
 
-    const product = await this.databaseRepo.product.findUnique({
+    return await this.databaseRepo.product.findUnique({
       where: { id },
       include: { images: true },
     });
-
-    //@ts-ignore
-    product.price = product.price.toString();
-    return product;
   }
 
   async update(id: number, data: Prisma.ProductUpdateInput) {
@@ -50,7 +40,10 @@ export class ProductService {
 
   async remove(id: number) {
     if (!id) throw new BadRequestException('id must be provided');
-
-    return await this.databaseRepo.product.delete({ where: { id } });
+    try {
+      return await this.databaseRepo.product.delete({ where: { id } });
+    } catch (err) {
+      return { massage: 'there is already no user with this id' };
+    }
   }
 }

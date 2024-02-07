@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { TransformBigint } from './intercepotor/transform_bigint.interceptor';
 
 const cookieSession = require('cookie-session');
 
@@ -11,6 +12,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   app.use(cookieSession({ keys: [process.env.COOKIE_SESSION_KEY] }));
+
+  app.useGlobalInterceptors(new TransformBigint());
 
   const config = new DocumentBuilder()
     .setTitle('store_api')
