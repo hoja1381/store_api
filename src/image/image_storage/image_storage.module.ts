@@ -8,7 +8,7 @@ import { diskStorage } from 'multer';
     MulterModule.registerAsync({
       useFactory: () => ({
         storage: diskStorage({
-          destination: './Images',
+          destination: './images',
         }),
       }),
     }),

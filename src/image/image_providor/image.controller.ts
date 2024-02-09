@@ -1,5 +1,6 @@
 import {
   BadGatewayException,
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -28,6 +29,8 @@ export class ImageController {
     @Body() body: any,
     @UploadedFile(new ParseFilePipe()) image: Express.Multer.File,
   ) {
+    if (!+body.productId) throw new BadRequestException('id must be a number');
+
     return await this.imageService.save(
       image,
       +body.productId,
