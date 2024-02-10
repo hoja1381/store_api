@@ -7,18 +7,21 @@ import {
   Param,
   Delete,
   ForbiddenException,
+  UseGuards,
 } from '@nestjs/common';
 import { CardService } from './card.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { CurrentUser } from 'src/decorator/current_user';
 import { User } from '@prisma/client';
+import { IsLoggedInGuard } from 'src/guard/is_logged_user.guard';
 
 @Controller('cart')
 export class CardController {
   constructor(private readonly cardService: CardService) {}
 
   @Post('/')
+  @UseGuards(IsLoggedInGuard)
   async create(
     @Body() createCardDto: CreateCardDto,
     @CurrentUser() user: User,
@@ -27,11 +30,13 @@ export class CardController {
   }
 
   @Get('/')
+  @UseGuards(IsLoggedInGuard)
   async findByUser(@CurrentUser() user: User) {
     return await this.cardService.findByUser(user.id);
   }
 
   @Get('/:id')
+  @UseGuards(IsLoggedInGuard)
   async findOne(@Param('id') id: string, @CurrentUser() user: User) {
     const cart = await this.cardService.findOne(+id);
 
@@ -42,6 +47,7 @@ export class CardController {
   }
 
   @Patch('/addproduct/:id')
+  @UseGuards(IsLoggedInGuard)
   async addProductToCart(
     @CurrentUser() user: User,
     @Param('id') id: string,
@@ -53,6 +59,7 @@ export class CardController {
   }
 
   @Patch('/removeproduct/:id')
+  @UseGuards(IsLoggedInGuard)
   async removeProductFromCart(
     @CurrentUser() user: User,
     @Param('id') id: string,
@@ -64,6 +71,7 @@ export class CardController {
   }
 
   @Delete(':id')
+  @UseGuards(IsLoggedInGuard)
   async remove(@Param('id') id: string, @CurrentUser() user: User) {
     await this.findOne(id, user);
 
