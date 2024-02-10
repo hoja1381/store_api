@@ -13,9 +13,9 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { IsAdminGuard } from '../../guard/is_admin.guard';
-import { IsLoggedInGuard } from '../../guard/is_logged_user.guard';
-import { CurrentUser } from '../../decorator/current_user';
+import { IsAdminGuard } from '../../common/guard/is_admin.guard';
+import { IsLoggedInGuard } from '../../common/guard/is_logged_user.guard';
+import { CurrentUser } from '../../common/decorator/current_user';
 
 @Controller('user')
 export class UserController {

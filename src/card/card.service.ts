@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateCardDto } from './dto/create-card.dto';
-import { DatabaseRepo } from 'src/database/database.service';
+import { DatabaseRepo } from 'src/common/database/database.service';
 import { ProductService } from 'src/product/product.service';
 import { UpdateCardDto } from './dto/update-card.dto';
 

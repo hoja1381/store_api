@@ -13,7 +13,7 @@ import {
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { IsAdminGuard } from 'src/guard/is_admin.guard';
+import { IsAdminGuard } from 'src/common/guard/is_admin.guard';
 
 @Controller('product')
 export class ProductController {

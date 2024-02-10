@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
-import { DatabaseRepo } from '../../database/database.service';
+import { DatabaseRepo } from '../../common/database/database.service';
 import { describe } from 'node:test';
 import { NotFoundException } from '@nestjs/common';
 

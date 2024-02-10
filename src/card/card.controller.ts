@@ -12,9 +12,9 @@ import {
 import { CardService } from './card.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
-import { CurrentUser } from 'src/decorator/current_user';
+import { CurrentUser } from 'src/common/decorator/current_user';
 import { User } from '@prisma/client';
-import { IsLoggedInGuard } from 'src/guard/is_logged_user.guard';
+import { IsLoggedInGuard } from 'src/common/guard/is_logged_user.guard';
 
 @Controller('cart')
 export class CardController {

@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { DatabaseRepo } from '../../database/database.service';
+import { DatabaseRepo } from '../../common/database/database.service';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
