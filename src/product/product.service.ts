@@ -27,9 +27,11 @@ export class ProductService {
     return await this.databaseRepo.product.create({ data: data });
   }
 
-  async findAll() {
+  async findAll(skip?: number, take?: number) {
     const products = await this.databaseRepo.product.findMany({
       include: { images: true },
+      skip: skip || 0,
+      take: take || 10,
     });
 
     if (products.length <= 0)
