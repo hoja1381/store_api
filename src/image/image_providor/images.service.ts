@@ -2,6 +2,7 @@ import {
   BadGatewayException,
   BadRequestException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 
 import { DatabaseRepo } from 'src/database/database.service';
@@ -15,34 +16,45 @@ export class ImageService {
   ) {}
 
   async save(image: Express.Multer.File, productId: number, isCover: boolean) {
-    const savedImagePath = await this.imagesStorageService.save(image);
-
-    if (!savedImagePath)
-      throw new BadRequestException(" couldn't save the image");
-
+    // check the Cover to be singular
     const isCoverCheck = await this.databaseRepo.image.findFirst({
       where: { isCover: true, productId: productId },
     });
 
-    if (isCoverCheck)
+    if (isCoverCheck && isCover)
       throw new BadRequestException(
         'you cant upload more than one cover for each product.',
       );
 
-    const dbImage = await this.databaseRepo.image.create({
+    //save the images
+    const savedImagePath = await this.imagesStorageService.save(image);
+    if (!savedImagePath)
+      throw new BadRequestException(" couldn't save the image");
+
+    // check the product id to ref a real product in db
+    const productRef = await this.databaseRepo.product.findUnique({
+      where: { id: productId },
+    });
+    if (!productRef) {
+      await this.imagesStorageService.delete(savedImagePath);
+      throw new NotFoundException('productId is not correct.');
+    }
+
+    // create the image in db and return it
+    return await this.databaseRepo.image.create({
       data: { href: savedImagePath, isCover, productId },
     });
-
-    return dbImage;
   }
 
   async delete(imagePath: string) {
-    const isDeleted = await this.imagesStorageService.delete(imagePath);
-    if (!isDeleted) throw new BadGatewayException('couldnt delete the image!');
-
     const imageInDb = await this.databaseRepo.image.findFirst({
       where: { href: imagePath },
     });
+    if (!imageInDb)
+      throw new NotFoundException('the image is already has been deleted');
+
+    const isDeleted = await this.imagesStorageService.delete(imagePath);
+    if (!isDeleted) throw new BadGatewayException('couldnt delete the image!');
 
     return await this.databaseRepo.image.delete({
       where: { id: imageInDb.id },
