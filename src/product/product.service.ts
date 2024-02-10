@@ -18,9 +18,10 @@ export class ProductService {
     const duplicateProduct = await this.databaseRepo.product.findUnique({
       where: { name: data.name },
     });
+
     if (duplicateProduct)
       throw new BadRequestException(
-        'there is existing product whit this name.',
+        `there is existing product whit this name=${data.name}`,
       );
 
     return await this.databaseRepo.product.create({ data: data });
@@ -37,16 +38,16 @@ export class ProductService {
     return products;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, withImages: boolean) {
     if (!id) throw new BadRequestException('id must be provided');
 
     const product = await this.databaseRepo.product.findUnique({
       where: { id },
-      include: { images: true },
+      include: { images: withImages },
     });
 
     if (!product)
-      throw new NotFoundException('product not found with that Id.');
+      throw new NotFoundException(`product not found with this Id= ${id}`);
 
     return product;
   }
@@ -63,7 +64,7 @@ export class ProductService {
         data,
       });
     } catch (err) {
-      throw new NotFoundException('product not found with that id.');
+      throw new NotFoundException(`product not found with this id=${id}`);
     }
   }
 
@@ -72,7 +73,7 @@ export class ProductService {
     try {
       return await this.databaseRepo.product.delete({ where: { id } });
     } catch (err) {
-      return { massage: 'there is already no user with this id' };
+      return { massage: `product not found with this id=${id}` };
     }
   }
 }
