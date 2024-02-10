@@ -15,6 +15,43 @@ export class CardService {
     private productService: ProductService,
   ) {}
 
+  async findByUser(user_id: number) {
+    const carts = await this.databaseRepo.cart.findMany({
+      where: { user_id },
+      include: {
+        products: {
+          select: { productId: true, product: true, productQty: true },
+        },
+        User: { select: { id: true, fullName: true, email: true } },
+      },
+    });
+
+    if (carts.length <= 0)
+      throw new NotFoundException(
+        `there is no cart for this user by id=${user_id}`,
+      );
+
+    return carts;
+  }
+
+  async findOne(id: number) {
+    if (!id) throw new BadRequestException('id must be provided');
+
+    const cart = await this.databaseRepo.cart.findUnique({
+      where: { id },
+      include: {
+        products: {
+          select: { productId: true, product: true, productQty: true },
+        },
+        User: { select: { id: true, fullName: true, email: true } },
+      },
+    });
+
+    if (!cart) throw new NotFoundException(`cart not found with this id=${id}`);
+
+    return cart;
+  }
+
   async create(data: CreateCardDto, user_id: number) {
     if (!data || !user_id)
       throw new BadRequestException('product IDs and userId must be provided.');
@@ -44,37 +81,7 @@ export class CardService {
       data: createData,
     });
 
-    return await this.databaseRepo.cart.findUnique({
-      where: { id: cart.id },
-      include: { products: true },
-    });
-  }
-
-  async findByUser(user_id: number) {
-    const carts = await this.databaseRepo.cart.findMany({
-      where: { user_id },
-      include: { products: true, User: true },
-    });
-
-    if (carts.length <= 0)
-      throw new NotFoundException(
-        `there is no cart for this user by id=${user_id}`,
-      );
-
-    return carts;
-  }
-
-  async findOne(id: number) {
-    if (!id) throw new BadRequestException('id must be provided');
-
-    const cart = await this.databaseRepo.cart.findUnique({
-      where: { id },
-      include: { products: true, User: true },
-    });
-
-    if (!cart) throw new NotFoundException(`cart not found with this id=${id}`);
-
-    return cart;
+    return await this.findOne(cart.id);
   }
 
   async addProductToCart(id: number, data: UpdateCardDto) {
@@ -109,10 +116,7 @@ export class CardService {
       });
     }
 
-    return await this.databaseRepo.cart.findUnique({
-      where: { id },
-      include: { products: true },
-    });
+    return await this.findOne(id);
   }
 
   async deleteProductFromCart(id: number, data: UpdateCardDto) {
@@ -148,10 +152,7 @@ export class CardService {
       });
     }
 
-    return await this.databaseRepo.cart.findUnique({
-      where: { id },
-      include: { products: true },
-    });
+    return await this.findOne(id);
   }
 
   async remove(id: number) {
@@ -162,13 +163,19 @@ export class CardService {
     for (const obj of cart.products) {
       await this.databaseRepo.cartToProduct.delete({
         where: {
-          cartId_productId: { cartId: obj.cartId, productId: obj.productId },
+          cartId_productId: { cartId: id, productId: obj.productId },
         },
       });
     }
 
     return await this.databaseRepo.cart.delete({
       where: { id },
+      include: {
+        products: {
+          select: { productId: true, product: true, productQty: true },
+        },
+        User: { select: { id: true, fullName: true, email: true } },
+      },
     });
   }
 }
