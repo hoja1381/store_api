@@ -62,5 +62,5 @@ model Order {
   user       User      @relation(fields: [user_id], references: [id])
   user_id    Int
   product    Product[]
-  finalPrice BigInt[]
+  finalPrice BigInt
 }
