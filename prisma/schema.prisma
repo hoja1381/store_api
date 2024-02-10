@@ -22,13 +22,13 @@ model User {
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique
+  id          Int             @id @default(autoincrement())
+  name        String          @unique
   description String?
   price       BigInt
   images      Image[]
-  carts       Cart[]
   orders      Order[]
+  cart        CartToProduct[]
 }
 
 model Image {
@@ -40,11 +40,21 @@ model Image {
 }
 
 model Cart {
-  id         Int       @id @default(autoincrement())
-  User       User?     @relation(fields: [user_id], references: [id])
+  id         Int             @id @default(autoincrement())
+  User       User?           @relation(fields: [user_id], references: [id])
   user_id    Int?
-  totalPrice BigInt
-  products   Product[]
+  totalPrice BigInt?
+  products   CartToProduct[]
+}
+
+model CartToProduct {
+  cart       Cart    @relation(fields: [cartId], references: [id])
+  product    Product @relation(fields: [productId], references: [id])
+  cartId     Int
+  productId  Int
+  productQty Int     @default(1)
+
+  @@id([cartId, productId])
 }
 
 model Order {
