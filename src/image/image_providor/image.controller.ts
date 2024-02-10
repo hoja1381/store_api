@@ -1,5 +1,4 @@
 import {
-  BadGatewayException,
   BadRequestException,
   Body,
   Controller,
@@ -7,12 +6,12 @@ import {
   Param,
   ParseFilePipe,
   Post,
-  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageService } from './images.service';
+import { ApiTags } from '@nestjs/swagger';
 
 class createImageDto {
   productId: number;
@@ -20,6 +19,7 @@ class createImageDto {
 }
 
 @Controller('image')
+@ApiTags('images')
 export class ImageController {
   constructor(private imageService: ImageService) {}
 

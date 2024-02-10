@@ -15,8 +15,10 @@ import { UpdateCardDto } from './dto/update-card.dto';
 import { CurrentUser } from 'src/common/decorator/current_user';
 import { User } from '@prisma/client';
 import { IsLoggedInGuard } from 'src/common/guard/is_logged_user.guard';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('cart')
+@ApiTags('cart')
 export class CardController {
   constructor(private readonly cardService: CardService) {}
 

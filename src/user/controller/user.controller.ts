@@ -16,8 +16,10 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { IsAdminGuard } from '../../common/guard/is_admin.guard';
 import { IsLoggedInGuard } from '../../common/guard/is_logged_user.guard';
 import { CurrentUser } from '../../common/decorator/current_user';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('user')
+@ApiTags('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
