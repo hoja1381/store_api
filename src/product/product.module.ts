@@ -7,5 +7,6 @@ import { ImageModule } from 'src/image/image_providor/image.module';
   imports: [ImageModule],
   controllers: [ProductController],
   providers: [ProductService],
+  exports: [ProductService],
 })
 export class ProductModule {}
