@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './common/database/database.module';
 import { UserModule } from './user/user.module';
-import { VerifyUser } from './middleware/verify_cookie';
+import { VerifyUser } from './common/middleware/verify_cookie';
 import { ProductModule } from './product/product.module';
 import { ImageStorageModule } from './image/image_storage/image_storage.module';
 import { ImageController } from './image/image_providor/image.controller';
