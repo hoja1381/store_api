@@ -35,7 +35,5 @@ describe('UserService', () => {
         expect(err).toBeInstanceOf(BadRequestException);
       }
     });
-
-    it('should return hashed password', async () => {});
   });
 });
