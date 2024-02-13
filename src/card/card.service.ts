@@ -43,7 +43,9 @@ export class CardService {
         products: {
           select: { productId: true, product: true, productQty: true },
         },
-        User: { select: { id: true, fullName: true, email: true } },
+        User: {
+          select: { id: true, fullName: true, email: true, address: true },
+        },
       },
     });
 
