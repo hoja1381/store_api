@@ -8,5 +8,6 @@ import { UserService } from 'src/user/service/user.service';
   imports: [ProductModule],
   controllers: [CardController],
   providers: [CardService],
+  exports: [CardService],
 })
 export class CardModule {}
