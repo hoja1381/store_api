@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { DatabaseRepo } from 'src/common/database/database.service';
+import { DatabaseRepo } from '../../common/database/database.service';
 import { ImageStorageService } from '../image_storage/Images_storage.service';
 
 @Injectable()
