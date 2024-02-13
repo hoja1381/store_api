@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateCardDto } from './dto/create-card.dto';
-import { DatabaseRepo } from 'src/common/database/database.service';
-import { ProductService } from 'src/product/product.service';
+import { DatabaseRepo } from '../common/database/database.service';
+import { ProductService } from '../product/product.service';
 import { UpdateCardDto } from './dto/update-card.dto';
 
 @Injectable()
@@ -22,7 +22,9 @@ export class CardService {
         products: {
           select: { productId: true, product: true, productQty: true },
         },
-        User: { select: { id: true, fullName: true, email: true } },
+        User: {
+          select: { id: true, fullName: true, email: true, address: true },
+        },
       },
     });
 
@@ -176,7 +178,9 @@ export class CardService {
         products: {
           select: { productId: true, product: true, productQty: true },
         },
-        User: { select: { id: true, fullName: true, email: true } },
+        User: {
+          select: { id: true, fullName: true, email: true, address: true },
+        },
       },
     });
   }
