@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { DatabaseRepo } from 'src/common/database/database.service';
+import { DatabaseRepo } from '../common/database/database.service';
 import { Prisma } from '@prisma/client';
 import { CreateProductDto } from './dto/create-product.dto';
 
@@ -28,6 +28,7 @@ export class ProductService {
   }
 
   async findAll(skip?: number, take?: number) {
+    const count = await this.databaseRepo.product.count();
     const products = await this.databaseRepo.product.findMany({
       include: { images: true },
       skip: skip || 0,
@@ -37,7 +38,7 @@ export class ProductService {
     if (products.length <= 0)
       throw new NotFoundException('there is no product to show.');
 
-    return products;
+    return { products, count };
   }
 
   async findOne(id: number, withImages: boolean) {
@@ -61,7 +62,7 @@ export class ProductService {
     if (!id) throw new BadRequestException('id must be provided');
 
     try {
-      await this.databaseRepo.product.update({
+      return await this.databaseRepo.product.update({
         where: { id },
         data,
       });
@@ -75,7 +76,7 @@ export class ProductService {
     try {
       return await this.databaseRepo.product.delete({ where: { id } });
     } catch (err) {
-      return { massage: `product not found with this id=${id}` };
+      throw new NotFoundException(`product not found with this id=${id}`);
     }
   }
 }
