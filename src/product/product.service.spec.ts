@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductService } from './product.service';
 import { DatabaseRepo } from '../common/database/database.service';
+import { IsNumber } from 'class-validator';
+import exp from 'constants';
 
 describe('ProductService', () => {
   let service: ProductService;
