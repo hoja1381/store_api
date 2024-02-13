@@ -59,8 +59,12 @@ model CartToProduct {
 
 model Order {
   id         Int       @id @default(autoincrement())
-  user       User      @relation(fields: [user_id], references: [id])
+  User       User      @relation(fields: [user_id], references: [id])
   user_id    Int
   product    Product[]
   finalPrice BigInt
+  discount   Int?
+  totalPrice BigInt
+  status     String    @default("pendeing")
+  address    String
 }
