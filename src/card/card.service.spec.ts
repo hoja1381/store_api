@@ -23,7 +23,7 @@ describe('CardService', () => {
     expect(service).toBeDefined();
   });
 
-  const testUserId = 1;
+  const testUserId = 2;
   const data = {
     products: [
       {
