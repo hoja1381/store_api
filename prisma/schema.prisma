@@ -65,6 +65,6 @@ model Order {
   finalPrice BigInt
   discount   Int?
   totalPrice BigInt
-  status     String    @default("pendeing")
+  status     String    @default("pending")
   address    String
 }
