@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { DatabaseRepo } from 'src/common/database/database.service';
-import { CardService } from 'src/card/card.service';
+import { DatabaseRepo } from '../common/database/database.service';
+import { CardService } from '../card/card.service';
 import { User } from '@prisma/client';
 
 @Injectable()
