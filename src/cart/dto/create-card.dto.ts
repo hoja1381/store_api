@@ -1,6 +1,6 @@
-import { IsArray, IsNumber } from 'class-validator';
+import { IsArray } from 'class-validator';
 
-export class CreateCardDto {
+export class CreateCartDto {
   @IsArray()
   products: {
     productId: number;

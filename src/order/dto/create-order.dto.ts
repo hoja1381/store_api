@@ -2,7 +2,7 @@ import { IsNumber, IsOptional } from 'class-validator';
 
 export class CreateOrderDto {
   @IsNumber()
-  card_id: number;
+  cart_id: number;
 
   @IsNumber()
   @IsOptional()

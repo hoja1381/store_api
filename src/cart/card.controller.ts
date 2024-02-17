@@ -9,9 +9,9 @@ import {
   ForbiddenException,
   UseGuards,
 } from '@nestjs/common';
-import { CardService } from './card.service';
-import { CreateCardDto } from './dto/create-card.dto';
-import { UpdateCardDto } from './dto/update-card.dto';
+import { CartService } from './cart.service';
+import { CreateCartDto } from './dto/create-card.dto';
+import { UpdateCartDto } from './dto/update-card.dto';
 import { CurrentUser } from 'src/common/decorator/current_user';
 import { User } from '@prisma/client';
 import { IsLoggedInGuard } from 'src/common/guard/is_logged_user.guard';
@@ -19,28 +19,28 @@ import { ApiTags } from '@nestjs/swagger';
 
 @Controller('cart')
 @ApiTags('cart')
-export class CardController {
-  constructor(private readonly cardService: CardService) {}
+export class CartController {
+  constructor(private readonly cartService: CartService) {}
 
   @Post('/')
   @UseGuards(IsLoggedInGuard)
   async create(
-    @Body() createCardDto: CreateCardDto,
+    @Body() createCardDto: CreateCartDto,
     @CurrentUser() user: User,
   ) {
-    return await this.cardService.create(createCardDto, user?.id);
+    return await this.cartService.create(createCardDto, user?.id);
   }
 
   @Get('/')
   @UseGuards(IsLoggedInGuard)
   async findByUser(@CurrentUser() user: User) {
-    return await this.cardService.findByUser(user.id);
+    return await this.cartService.findByUser(user.id);
   }
 
   @Get('/:id')
   @UseGuards(IsLoggedInGuard)
   async findOne(@Param('id') id: string, @CurrentUser() user: User) {
-    const cart = await this.cardService.findOne(+id);
+    const cart = await this.cartService.findOne(+id);
 
     if (user.id !== cart.user_id)
       throw new ForbiddenException('you cant access that cart.');
@@ -53,11 +53,11 @@ export class CardController {
   async addProductToCart(
     @CurrentUser() user: User,
     @Param('id') id: string,
-    @Body() updateCardDto: UpdateCardDto,
+    @Body() updateCardDto: UpdateCartDto,
   ) {
     await this.findOne(id, user);
 
-    return await this.cardService.addProductToCart(+id, updateCardDto);
+    return await this.cartService.addProductToCart(+id, updateCardDto);
   }
 
   @Patch('/removeproduct/:id')
@@ -65,11 +65,11 @@ export class CardController {
   async removeProductFromCart(
     @CurrentUser() user: User,
     @Param('id') id: string,
-    @Body() updateCardDto: UpdateCardDto,
+    @Body() updateCardDto: UpdateCartDto,
   ) {
     await this.findOne(id, user);
 
-    return await this.cardService.deleteProductFromCart(+id, updateCardDto);
+    return await this.cartService.deleteProductFromCart(+id, updateCardDto);
   }
 
   @Delete(':id')
@@ -77,6 +77,6 @@ export class CardController {
   async remove(@Param('id') id: string, @CurrentUser() user: User) {
     await this.findOne(id, user);
 
-    return await this.cardService.remove(+id);
+    return await this.cartService.remove(+id);
   }
 }

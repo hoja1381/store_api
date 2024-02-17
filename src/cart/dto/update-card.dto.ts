@@ -1,8 +1,8 @@
 import { PartialType } from '@nestjs/swagger';
-import { CreateCardDto } from './create-card.dto';
+import { CreateCartDto } from './create-card.dto';
 import { IsNumber } from 'class-validator';
 
-export class UpdateCardDto {
+export class UpdateCartDto {
   @IsNumber()
   productId: number;
   @IsNumber()

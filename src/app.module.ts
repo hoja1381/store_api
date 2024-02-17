@@ -7,7 +7,7 @@ import { ProductModule } from './product/product.module';
 import { ImageStorageModule } from './image/image_storage/image_storage.module';
 import { ImageController } from './image/image_providor/image.controller';
 import { ImageModule } from './image/image_providor/image.module';
-import { CardModule } from './card/card.module';
+import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 import { RedisModule } from './redis/redis.module';
 
@@ -20,7 +20,7 @@ import { RedisModule } from './redis/redis.module';
     ProductModule,
     ImageStorageModule,
     ImageModule,
-    CardModule,
+    CartModule,
     OrderModule,
   ],
   controllers: [ImageController],

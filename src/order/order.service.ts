@@ -7,7 +7,7 @@ import {
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { DatabaseRepo } from '../common/database/database.service';
-import { CardService } from '../card/card.service';
+import { CartService } from '../cart/cart.service';
 import { User } from '@prisma/client';
 import { Cache } from 'src/redis/cashe.decorator';
 
@@ -15,16 +15,16 @@ import { Cache } from 'src/redis/cashe.decorator';
 export class OrderService {
   constructor(
     private databaseRepo: DatabaseRepo,
-    private cardService: CardService,
+    private cartService: CartService,
   ) {}
 
   async create(data: CreateOrderDto, user: User) {
     if (!data) throw new BadRequestException('body data should be provided.');
 
-    const cart = await this.cardService.findOne(data.card_id);
+    const cart = await this.cartService.findOne(data.cart_id);
     if (!cart)
       throw new NotFoundException(
-        `cart not found with this id=${data.card_id}`,
+        `cart not found with this id=${data.cart_id}`,
       );
 
     if (user.id !== cart.user_id)
@@ -55,7 +55,7 @@ export class OrderService {
       },
     });
 
-    await this.cardService.remove(cart.id);
+    await this.cartService.remove(cart.id);
 
     return newOrder;
   }

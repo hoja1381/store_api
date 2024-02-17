@@ -1,22 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CardService } from './card.service';
+import { CartService } from './cart.service';
 import { DatabaseRepo } from '../common/database/database.service';
 import { ProductService } from '../product/product.service';
-import { Cart } from '@prisma/client';
 
 describe('CardService', () => {
-  let service: CardService;
+  let service: CartService;
   let repo: DatabaseRepo;
   let productService: ProductService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CardService, DatabaseRepo, ProductService],
+      providers: [CartService, DatabaseRepo, ProductService],
     }).compile();
 
     productService = module.get<ProductService>(ProductService);
     repo = module.get<DatabaseRepo>(DatabaseRepo);
-    service = module.get<CardService>(CardService);
+    service = module.get<CartService>(CartService);
   });
 
   it('should be defined', () => {

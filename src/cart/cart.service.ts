@@ -3,13 +3,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateCardDto } from './dto/create-card.dto';
+import { CreateCartDto } from './dto/create-card.dto';
 import { DatabaseRepo } from '../common/database/database.service';
 import { ProductService } from '../product/product.service';
-import { UpdateCardDto } from './dto/update-card.dto';
+import { UpdateCartDto } from './dto/update-card.dto';
 
 @Injectable()
-export class CardService {
+export class CartService {
   constructor(
     private databaseRepo: DatabaseRepo,
     private productService: ProductService,
@@ -56,7 +56,7 @@ export class CardService {
     return cart;
   }
 
-  async create(data: CreateCardDto, user_id: number) {
+  async create(data: CreateCartDto, user_id: number) {
     if (!data || !user_id)
       throw new BadRequestException('product IDs and userId must be provided.');
 
@@ -88,7 +88,7 @@ export class CardService {
     return await this.findOne(cart.id);
   }
 
-  async addProductToCart(id: number, data: UpdateCardDto) {
+  async addProductToCart(id: number, data: UpdateCartDto) {
     const card = await this.findOne(id);
     const pivot = await this.databaseRepo.cartToProduct.findUnique({
       where: {
@@ -123,7 +123,7 @@ export class CardService {
     return await this.findOne(id);
   }
 
-  async deleteProductFromCart(id: number, data: UpdateCardDto) {
+  async deleteProductFromCart(id: number, data: UpdateCartDto) {
     const card = await this.findOne(id);
     const pivot = await this.databaseRepo.cartToProduct.findUnique({
       where: {

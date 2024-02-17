@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrderService } from './order.service';
 import { DatabaseRepo } from '../common/database/database.service';
-import { CardService } from '../card/card.service';
+import { CardService } from '../cart/cart.service';
 import { ProductService } from '../product/product.service';
 import { Cart, Order, User } from '@prisma/client';
-import { CreateCardDto } from 'src/card/dto/create-card.dto';
+import { CreateCardDto } from 'src/cart/dto/create-card.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 
 describe('OrderService', () => {
