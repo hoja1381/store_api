@@ -22,6 +22,7 @@ import {
   FindOneProductDoc,
   UpdateProductDoc,
 } from 'src/common/swagger/productDoc/product.swagger.decprators';
+import { Cache } from 'src/common/redis/cashe.decorator';
 
 @Controller('product')
 @ApiTags('product')
@@ -38,6 +39,7 @@ export class ProductController {
   @Get('/')
   @HttpCode(200)
   @FindAllProductsDoc()
+  @Cache(3600)
   findAll(@Query('skip') skip: string, @Query('take') take: string) {
     return this.productService.findAll(+skip, +take);
   }
@@ -45,6 +47,7 @@ export class ProductController {
   @Get('/:id')
   @HttpCode(200)
   @FindOneProductDoc()
+  @Cache(3600)
   findOne(@Param('id') id: string) {
     return this.productService.findOne(+id, true);
   }

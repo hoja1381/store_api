@@ -9,7 +9,7 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { DatabaseRepo } from '../common/database/database.service';
 import { CartService } from '../cart/cart.service';
 import { User } from '@prisma/client';
-import { Cache } from 'src/common/redis/cashe.decorator';
+import { Cache } from '../common/redis/cashe.decorator';
 
 @Injectable()
 export class OrderService {
@@ -60,7 +60,6 @@ export class OrderService {
     return newOrder;
   }
 
-  @Cache(3600)
   async findByUser(user_id: number) {
     if (!user_id) throw new BadRequestException('user id should be provided.');
 
@@ -82,7 +81,6 @@ export class OrderService {
     return orders;
   }
 
-  @Cache(3600)
   async findOne(id: number) {
     if (!id) throw new BadRequestException('order id should be provided.');
 
@@ -101,7 +99,6 @@ export class OrderService {
     return order;
   }
 
-  @Cache(3600)
   async findAll() {
     const orders = await this.databaseRepo.order.findMany({
       include: {

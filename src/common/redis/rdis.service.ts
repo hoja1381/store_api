@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import * as Redis from 'ioredis';
-import { _convert_bigint_tostring } from 'src/common/interceptor/transform_bigint.interceptor';
+import { _convert_bigint_tostring } from '../interceptor/transform_bigint.interceptor';
 const config = new ConfigService();
 
 @Injectable()

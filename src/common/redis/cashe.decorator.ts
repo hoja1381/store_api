@@ -1,4 +1,4 @@
-import { _convert_bigint_tostring } from 'src/common/interceptor/transform_bigint.interceptor';
+import { _convert_bigint_tostring } from '../../common/interceptor/transform_bigint.interceptor';
 import { RedisService } from './rdis.service';
 const cacheService = new RedisService();
 

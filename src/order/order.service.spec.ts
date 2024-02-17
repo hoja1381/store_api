@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrderService } from './order.service';
 import { DatabaseRepo } from '../common/database/database.service';
-import { CardService } from '../cart/cart.service';
+import { CartService } from '../cart/cart.service';
 import { ProductService } from '../product/product.service';
 import { Cart, Order, User } from '@prisma/client';
-import { CreateCardDto } from 'src/cart/dto/create-card.dto';
+import { CreateCartDto } from 'src/cart/dto/create-card.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 
 describe('OrderService', () => {
   let service: OrderService;
 
   let databaseRepo: DatabaseRepo;
-  let cardService: CardService;
+  let cartService: CartService;
 
   let testCart: Cart;
   let user: User;
@@ -20,16 +20,16 @@ describe('OrderService', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [OrderService, DatabaseRepo, CardService, ProductService],
+      providers: [OrderService, DatabaseRepo, CartService, ProductService],
     }).compile();
 
-    cardService = module.get<CardService>(CardService);
+    cartService = module.get<CartService>(CartService);
     databaseRepo = module.get<DatabaseRepo>(DatabaseRepo);
 
     service = module.get<OrderService>(OrderService);
 
     user = { id: 2 } as User;
-    testCart = await cardService.create(
+    testCart = await cartService.create(
       {
         products: [
           {
@@ -41,10 +41,10 @@ describe('OrderService', () => {
             productQty: 2,
           },
         ],
-      } as CreateCardDto,
+      } as CreateCartDto,
       user.id,
     );
-    data = { card_id: testCart.id, discount: 10 };
+    data = { cart_id: testCart.id, discount: 10 };
   });
 
   it('should be defined', () => {

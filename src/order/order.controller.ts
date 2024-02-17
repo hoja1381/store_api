@@ -16,6 +16,7 @@ import { CurrentUser } from 'src/common/decorator/current_user';
 import { User } from '@prisma/client';
 import { IsLoggedInGuard } from 'src/common/guard/is_logged_user.guard';
 import { IsAdminGuard } from 'src/common/guard/is_admin.guard';
+import { Cache } from 'src/common/redis/cashe.decorator';
 
 @Controller('order')
 @ApiTags('order')
@@ -30,18 +31,21 @@ export class OrderController {
 
   @Get('/')
   @UseGuards(IsAdminGuard)
+  @Cache(3600)
   findAll() {
     return this.orderService.findAll();
   }
 
   @Get('/byuser')
   @UseGuards(IsLoggedInGuard)
+  @Cache(3600)
   findByUser(@CurrentUser() user: User) {
     return this.orderService.findByUser(user.id);
   }
 
   @Get('/:id')
   @UseGuards(IsAdminGuard)
+  @Cache(3600)
   findOne(@Param('id') id: string) {
     return this.orderService.findOne(+id);
   }
