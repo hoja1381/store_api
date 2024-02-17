@@ -6,7 +6,7 @@ import {
 import { DatabaseRepo } from '../common/database/database.service';
 import { Prisma } from '@prisma/client';
 import { CreateProductDto } from './dto/create-product.dto';
-import { Cache } from 'src/redis/cashe.decorator';
+import { Cache } from 'src/common/redis/cashe.decorator';
 
 @Injectable()
 export class ProductService {

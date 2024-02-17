@@ -9,7 +9,7 @@ import { ImageController } from './image/image_providor/image.controller';
 import { ImageModule } from './image/image_providor/image.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
-import { RedisModule } from './redis/redis.module';
+import { RedisModule } from './common/redis/redis.module';
 
 @Module({
   imports: [
