@@ -15,6 +15,13 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { IsAdminGuard } from 'src/common/guard/is_admin.guard';
 import { ApiTags } from '@nestjs/swagger';
+import {
+  CreateProductDoc,
+  DeleteProductDoc,
+  FindAllProductsDoc,
+  FindOneProductDoc,
+  UpdateProductDoc,
+} from 'src/common/swagger/productDoc/product.swagger.decprators';
 
 @Controller('product')
 @ApiTags('product')
@@ -23,18 +30,21 @@ export class ProductController {
 
   @Post('/')
   @UseGuards(IsAdminGuard)
+  @CreateProductDoc()
   async create(@Body() createProductDto: CreateProductDto) {
     return await this.productService.create(createProductDto);
   }
 
   @Get('/')
   @HttpCode(200)
+  @FindAllProductsDoc()
   findAll(@Query('skip') skip: string, @Query('take') take: string) {
     return this.productService.findAll(+skip, +take);
   }
 
   @Get('/:id')
   @HttpCode(200)
+  @FindOneProductDoc()
   findOne(@Param('id') id: string) {
     return this.productService.findOne(+id, true);
   }
@@ -42,6 +52,7 @@ export class ProductController {
   @Patch('/:id')
   @HttpCode(200)
   @UseGuards(IsAdminGuard)
+  @UpdateProductDoc()
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
     return this.productService.update(+id, updateProductDto);
   }
@@ -49,6 +60,7 @@ export class ProductController {
   @Delete('/:id')
   @HttpCode(200)
   @UseGuards(IsAdminGuard)
+  @DeleteProductDoc()
   remove(@Param('id') id: string) {
     return this.productService.remove(+id);
   }
