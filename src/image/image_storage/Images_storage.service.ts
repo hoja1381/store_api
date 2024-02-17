@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { writeFileSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { v4 as uuid } from 'uuid';
@@ -7,9 +7,18 @@ import { v4 as uuid } from 'uuid';
 export class ImageStorageService {
   async save(file: Express.Multer.File): Promise<string> {
     let fileName: string = uuid();
+
+    const mb = 5;
+    const bytes = mb * 1000000;
+    if (file.size > bytes)
+      throw new BadRequestException(`the image should be less than ${mb} MB.`);
+
     if (file.mimetype.split('/')[0] == 'image') {
       fileName += '.png';
+    } else {
+      throw new BadRequestException('the file should be an image.');
     }
+
     try {
       const filePath = join(process.cwd(), 'images', fileName);
       writeFileSync(filePath, file.buffer);
