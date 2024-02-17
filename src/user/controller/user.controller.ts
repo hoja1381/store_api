@@ -17,6 +17,13 @@ import { IsAdminGuard } from '../../common/guard/is_admin.guard';
 import { IsLoggedInGuard } from '../../common/guard/is_logged_user.guard';
 import { CurrentUser } from '../../common/decorator/current_user';
 import { ApiTags } from '@nestjs/swagger';
+import {
+  DeleteDoc,
+  FindAllDoc,
+  FindOneDoc,
+  GetMeDoc,
+  UpdateDoc,
+} from '../../common/swagger/UserDoc/user.swagger.decorators';
 
 @Controller('user')
 @ApiTags('user')
@@ -25,8 +32,9 @@ export class UserController {
 
   @Get('/getMe')
   @HttpCode(200)
+  @GetMeDoc()
   async getMe(@CurrentUser() user) {
-    if (!user) throw new UnauthorizedException('ypu are not logged in');
+    if (!user) throw new UnauthorizedException('you are not logged in');
 
     return user;
   }
@@ -34,6 +42,7 @@ export class UserController {
   @Get('/')
   @HttpCode(200)
   @UseGuards(IsAdminGuard)
+  @FindAllDoc()
   findAll(@Query('skip') skip?: string, @Query('take') take?: string) {
     if (typeof +skip != 'number' || typeof +take != 'number')
       throw new BadRequestException('query params must be numbers.');
@@ -44,6 +53,7 @@ export class UserController {
   @Get('/:id')
   @HttpCode(200)
   @UseGuards(IsAdminGuard)
+  @FindOneDoc()
   findOne(@Param('id') id: string) {
     if (typeof +id != 'number')
       throw new BadRequestException('id params must be numbers.');
@@ -51,9 +61,10 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
-  @Patch('/:id')
+  @Patch('/')
   @HttpCode(200)
   @UseGuards(IsLoggedInGuard)
+  @UpdateDoc()
   update(@CurrentUser() user, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(user.id, updateUserDto);
   }
@@ -61,6 +72,7 @@ export class UserController {
   @Delete(':id')
   @HttpCode(200)
   @UseGuards(IsAdminGuard)
+  @DeleteDoc()
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
