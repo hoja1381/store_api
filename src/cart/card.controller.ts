@@ -12,10 +12,18 @@ import {
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-card.dto';
 import { UpdateCartDto } from './dto/update-card.dto';
-import { CurrentUser } from 'src/common/decorator/current_user';
+import { CurrentUser } from '../common/decorator/current_user';
 import { User } from '@prisma/client';
 import { IsLoggedInGuard } from 'src/common/guard/is_logged_user.guard';
 import { ApiTags } from '@nestjs/swagger';
+import {
+  AddProductToCartDoc,
+  CreateCartDoc,
+  FindCartByUser,
+  FindOneCartDoc,
+  RemoveCartDoc,
+  RemoveProductFromCartDoc,
+} from '../common/swagger/CartDoc/cart.swagger.decoorators';
 
 @Controller('cart')
 @ApiTags('cart')
@@ -24,6 +32,7 @@ export class CartController {
 
   @Post('/')
   @UseGuards(IsLoggedInGuard)
+  @CreateCartDoc()
   async create(
     @Body() createCardDto: CreateCartDto,
     @CurrentUser() user: User,
@@ -33,12 +42,14 @@ export class CartController {
 
   @Get('/')
   @UseGuards(IsLoggedInGuard)
+  @FindCartByUser()
   async findByUser(@CurrentUser() user: User) {
     return await this.cartService.findByUser(user.id);
   }
 
   @Get('/:id')
   @UseGuards(IsLoggedInGuard)
+  @FindOneCartDoc()
   async findOne(@Param('id') id: string, @CurrentUser() user: User) {
     const cart = await this.cartService.findOne(+id);
 
@@ -50,6 +61,7 @@ export class CartController {
 
   @Patch('/addproduct/:id')
   @UseGuards(IsLoggedInGuard)
+  @AddProductToCartDoc()
   async addProductToCart(
     @CurrentUser() user: User,
     @Param('id') id: string,
@@ -62,6 +74,7 @@ export class CartController {
 
   @Patch('/removeproduct/:id')
   @UseGuards(IsLoggedInGuard)
+  @RemoveProductFromCartDoc()
   async removeProductFromCart(
     @CurrentUser() user: User,
     @Param('id') id: string,
@@ -74,6 +87,7 @@ export class CartController {
 
   @Delete(':id')
   @UseGuards(IsLoggedInGuard)
+  @RemoveCartDoc()
   async remove(@Param('id') id: string, @CurrentUser() user: User) {
     await this.findOne(id, user);
 
