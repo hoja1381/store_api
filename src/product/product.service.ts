@@ -6,6 +6,7 @@ import {
 import { DatabaseRepo } from '../common/database/database.service';
 import { Prisma } from '@prisma/client';
 import { CreateProductDto } from './dto/create-product.dto';
+import { Cache } from 'src/redis/cashe.decorator';
 
 @Injectable()
 export class ProductService {
@@ -27,6 +28,7 @@ export class ProductService {
     return await this.databaseRepo.product.create({ data: data });
   }
 
+  @Cache(3600)
   async findAll(skip?: number, take?: number) {
     const count = await this.databaseRepo.product.count();
     const products = await this.databaseRepo.product.findMany({
@@ -41,6 +43,7 @@ export class ProductService {
     return { products, count };
   }
 
+  @Cache(3600)
   async findOne(id: number, withImages: boolean) {
     if (!id) throw new BadRequestException('id must be provided');
 
