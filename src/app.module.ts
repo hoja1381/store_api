@@ -9,10 +9,12 @@ import { ImageController } from './image/image_providor/image.controller';
 import { ImageModule } from './image/image_providor/image.module';
 import { CardModule } from './card/card.module';
 import { OrderModule } from './order/order.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    RedisModule,
     DatabaseModule,
     UserModule,
     ProductModule,
