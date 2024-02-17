@@ -39,7 +39,7 @@ export class ProductController {
   @Get('/')
   @HttpCode(200)
   @FindAllProductsDoc()
-  @Cache(3600)
+  @Cache(300)
   findAll(@Query('skip') skip: string, @Query('take') take: string) {
     return this.productService.findAll(+skip, +take);
   }
@@ -47,7 +47,7 @@ export class ProductController {
   @Get('/:id')
   @HttpCode(200)
   @FindOneProductDoc()
-  @Cache(3600)
+  @Cache(300)
   findOne(@Param('id') id: string) {
     return this.productService.findOne(+id, true);
   }

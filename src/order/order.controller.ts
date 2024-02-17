@@ -25,7 +25,6 @@ import {
   FindOneOrderDoc,
   UpdateOrderDoc,
 } from 'src/common/swagger/OrderDoc/ordr.swagger.decorators';
-import { DeleteDoc } from 'src/common/swagger/UserDoc/user.swagger.decorators';
 
 @Controller('order')
 @ApiTags('order')
@@ -42,7 +41,7 @@ export class OrderController {
   @Get('/')
   @UseGuards(IsAdminGuard)
   @FindAllOrdersDoc()
-  @Cache(3600)
+  @Cache(300)
   findAll() {
     return this.orderService.findAll();
   }
@@ -50,7 +49,7 @@ export class OrderController {
   @Get('/byuser')
   @UseGuards(IsLoggedInGuard)
   @FindByUserOrderDoc()
-  @Cache(3600)
+  @Cache(300)
   findByUser(@CurrentUser() user: User) {
     return this.orderService.findByUser(user.id);
   }
@@ -58,7 +57,7 @@ export class OrderController {
   @Get('/:id')
   @UseGuards(IsAdminGuard)
   @FindOneOrderDoc()
-  @Cache(3600)
+  @Cache(300)
   findOne(@Param('id') id: string) {
     return this.orderService.findOne(+id);
   }
