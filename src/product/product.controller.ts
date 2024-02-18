@@ -23,6 +23,7 @@ import {
   UpdateProductDoc,
 } from 'src/common/swagger/productDoc/product.swagger.decprators';
 import { Cache } from 'src/common/redis/cashe.decorator';
+import { IsLoggedInGuard } from 'src/common/guard/is_logged_user.guard';
 
 @Controller('product')
 @ApiTags('product')
@@ -30,7 +31,7 @@ export class ProductController {
   constructor(private productService: ProductService) {}
 
   @Post('/')
-  @UseGuards(IsAdminGuard)
+  @UseGuards(IsLoggedInGuard, IsAdminGuard)
   @CreateProductDoc()
   async create(@Body() createProductDto: CreateProductDto) {
     return await this.productService.create(createProductDto);
@@ -54,7 +55,7 @@ export class ProductController {
 
   @Patch('/:id')
   @HttpCode(200)
-  @UseGuards(IsAdminGuard)
+  @UseGuards(IsLoggedInGuard, IsAdminGuard)
   @UpdateProductDoc()
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
     return this.productService.update(+id, updateProductDto);
@@ -62,7 +63,7 @@ export class ProductController {
 
   @Delete('/:id')
   @HttpCode(200)
-  @UseGuards(IsAdminGuard)
+  @UseGuards(IsLoggedInGuard, IsAdminGuard)
   @DeleteProductDoc()
   remove(@Param('id') id: string) {
     return this.productService.remove(+id);

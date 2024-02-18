@@ -26,12 +26,12 @@ import {
 } from '../common/swagger/CartDoc/cart.swagger.decoorators';
 
 @Controller('cart')
+@UseGuards(IsLoggedInGuard)
 @ApiTags('cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Post('/')
-  @UseGuards(IsLoggedInGuard)
   @CreateCartDoc()
   async create(
     @Body() createCardDto: CreateCartDto,
@@ -41,14 +41,12 @@ export class CartController {
   }
 
   @Get('/')
-  @UseGuards(IsLoggedInGuard)
   @FindCartByUser()
   async findByUser(@CurrentUser() user: User) {
     return await this.cartService.findByUser(user.id);
   }
 
   @Get('/:id')
-  @UseGuards(IsLoggedInGuard)
   @FindOneCartDoc()
   async findOne(@Param('id') id: string, @CurrentUser() user: User) {
     const cart = await this.cartService.findOne(+id);
@@ -60,7 +58,6 @@ export class CartController {
   }
 
   @Patch('/addproduct/:id')
-  @UseGuards(IsLoggedInGuard)
   @AddProductToCartDoc()
   async addProductToCart(
     @CurrentUser() user: User,
@@ -73,7 +70,6 @@ export class CartController {
   }
 
   @Patch('/removeproduct/:id')
-  @UseGuards(IsLoggedInGuard)
   @RemoveProductFromCartDoc()
   async removeProductFromCart(
     @CurrentUser() user: User,
@@ -86,7 +82,6 @@ export class CartController {
   }
 
   @Delete(':id')
-  @UseGuards(IsLoggedInGuard)
   @RemoveCartDoc()
   async remove(@Param('id') id: string, @CurrentUser() user: User) {
     await this.findOne(id, user);

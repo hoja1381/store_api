@@ -27,12 +27,12 @@ import {
 } from 'src/common/swagger/OrderDoc/ordr.swagger.decorators';
 
 @Controller('order')
+@UseGuards(IsLoggedInGuard)
 @ApiTags('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post('/')
-  @UseGuards(IsLoggedInGuard)
   @CreateOrderDoc()
   create(@Body() body: CreateOrderDto, @CurrentUser() user: User) {
     return this.orderService.create(body, user);
@@ -47,7 +47,6 @@ export class OrderController {
   }
 
   @Get('/byuser')
-  @UseGuards(IsLoggedInGuard)
   @FindByUserOrderDoc()
   @Cache(300)
   findByUser(@CurrentUser() user: User) {

@@ -18,6 +18,7 @@ import {
   DeleteImageFromProductDoc,
 } from 'src/common/swagger/ImageDoc/image.swagger.decorator';
 import { IsAdminGuard } from 'src/common/guard/is_admin.guard';
+import { IsLoggedInGuard } from 'src/common/guard/is_logged_user.guard';
 
 class createImageDto {
   productId: number;
@@ -25,13 +26,13 @@ class createImageDto {
 }
 
 @Controller('image')
+@UseGuards(IsLoggedInGuard, IsAdminGuard)
 @ApiTags('images')
 export class ImageController {
   constructor(private imageService: ImageService) {}
 
   @Post('/')
   @AddImageToProductDoc()
-  @UseGuards(IsAdminGuard)
   @UseInterceptors(FileInterceptor('image'))
   async addImageToProduct(
     @Body() body: any,
@@ -47,7 +48,6 @@ export class ImageController {
   }
 
   @Delete('/:href')
-  @UseGuards(IsAdminGuard)
   @DeleteImageFromProductDoc()
   async deleteImageFromProduct(@Param('href') href: string) {
     return await this.imageService.delete(href);
