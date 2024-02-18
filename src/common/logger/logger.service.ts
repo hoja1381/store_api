@@ -32,7 +32,7 @@ export class CustomLoggerService implements LoggerService {
 
   _prepareLogMassage(message: string, type: string) {
     const dateTime = `${new Date().toLocaleDateString('en-US', options)}`;
-    return `[CUSTOM_LOG_${type}]-${dateTime}\t${message}\n`;
+    return `[CUSTOM_LOG_${type}]-${dateTime}\t${message}`;
   }
 
   _logToFile(message: string, logName: string) {
