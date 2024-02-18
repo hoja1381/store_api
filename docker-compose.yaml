@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  storeapi: 
+    image: storeapi:3
+    network_mode: host
+    environment:
+      - DATABASE_URL=postgresql://hoja1:hoja@localhost:5432/hoja?schema=public
+      - REDIS_HOST=localhost
+      - REDIS_PORT=6379
+      - COOKIE_SESSION_KEY="hoja"
