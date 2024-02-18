@@ -3,6 +3,9 @@ import { CartService } from './cart.service';
 import { DatabaseRepo } from '../common/database/database.service';
 import { ProductService } from '../product/product.service';
 import { UserService } from '../user/service/user.service';
+import { CreateProductDto } from 'src/product/dto/create-product.dto';
+import { CreateCartDto } from './dto/create-card.dto';
+import { Prisma } from '@prisma/client';
 
 describe('CardService', () => {
   let service: CartService;
@@ -11,9 +14,9 @@ describe('CardService', () => {
   let userService: UserService;
 
   let testUserId: number;
-  let data: any;
+  let data: CreateCartDto;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [CartService, DatabaseRepo, ProductService, UserService],
     }).compile();
@@ -23,18 +26,29 @@ describe('CardService', () => {
     repo = module.get<DatabaseRepo>(DatabaseRepo);
     service = module.get<CartService>(CartService);
 
-    const users = await userService.findAll();
-    testUserId = users[0].id;
-    const products = (await productService.findAll()).products;
+    const testUser = await userService.create({
+      email: 'testUserForCart@g.com',
+      password: '12345678',
+    } as Prisma.UserCreateInput);
+    testUserId = testUser.id;
+
+    const product1 = await productService.create({
+      name: 'test-p1',
+      price: 1000,
+    } as CreateProductDto);
+    const product2 = await productService.create({
+      name: 'test-p2',
+      price: 1000,
+    } as CreateProductDto);
 
     data = {
       products: [
         {
-          productId: products[0].id,
+          productId: product1.id,
           productQty: 1,
         },
         {
-          productId: products[1].id,
+          productId: product2.id,
           productQty: 1,
         },
       ],
@@ -94,5 +108,12 @@ describe('CardService', () => {
     expect(deleteCart.User).toStrictEqual(cart.User);
     expect(deleteCart.id).toBe(cart.id);
     expect(deleteCart.totalPrice.toString()).toBe(cart.totalPrice.toString());
+  });
+
+  afterAll(async () => {
+    await userService.remove(testUserId);
+
+    await productService.remove(data.products[0].productId);
+    await productService.remove(data.products[1].productId);
   });
 });

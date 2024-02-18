@@ -3,10 +3,11 @@ import { OrderService } from './order.service';
 import { DatabaseRepo } from '../common/database/database.service';
 import { CartService } from '../cart/cart.service';
 import { ProductService } from '../product/product.service';
-import { Cart, Order, User } from '@prisma/client';
+import { Cart, Order, Prisma, Product, User } from '@prisma/client';
 import { CreateCartDto } from '../cart/dto/create-card.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UserService } from '../user/service/user.service';
+import { CreateProductDto } from 'src/product/dto/create-product.dto';
 
 describe('OrderService', () => {
   let service: OrderService;
@@ -14,11 +15,15 @@ describe('OrderService', () => {
   let databaseRepo: DatabaseRepo;
   let cartService: CartService;
   let userService: UserService;
+  let productService: ProductService;
 
   let testCart: Cart;
   let user: User;
   let data: CreateOrderDto;
   let order: Order;
+
+  let product1: Product;
+  let product2: Product;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -31,24 +36,37 @@ describe('OrderService', () => {
       ],
     }).compile();
 
+    productService = module.get<ProductService>(ProductService);
     cartService = module.get<CartService>(CartService);
     databaseRepo = module.get<DatabaseRepo>(DatabaseRepo);
     userService = module.get<UserService>(UserService);
 
     service = module.get<OrderService>(OrderService);
 
-    const users = await userService.findAll();
-    user = users[0];
+    user = await userService.create({
+      email: 'testUserForOrder@g.com',
+      password: '12345678',
+      address: 'teheran',
+    } as Prisma.UserCreateInput);
+
+    product1 = await productService.create({
+      name: 'test-p1',
+      price: 1000,
+    } as CreateProductDto);
+    product2 = await productService.create({
+      name: 'test-p2',
+      price: 1000,
+    } as CreateProductDto);
 
     testCart = await cartService.create(
       {
         products: [
           {
-            productId: 1,
+            productId: product1.id,
             productQty: 2,
           },
           {
-            productId: 2,
+            productId: product2.id,
             productQty: 2,
           },
         ],
@@ -105,5 +123,12 @@ describe('OrderService', () => {
 
     expect(removedOrder.status).toBe('changed');
     expect(removedOrder.user_id).toBe(user.id);
+  });
+
+  afterAll(async () => {
+    await userService.remove(user.id);
+
+    await productService.remove(product1.id);
+    await productService.remove(product2.id);
   });
 });
