@@ -32,17 +32,14 @@ export class CustomLoggerService implements LoggerService {
 
   _prepareLogMassage(message: string, type: string) {
     const dateTime = `${new Date().toLocaleDateString('en-US', options)}`;
-    return `[CUSTOM_LOG_${type}]-${dateTime}\t${message}`;
+    return `[CUSTOM_LOG_${type}]-${dateTime}\t${message}\n`;
   }
 
   _logToFile(message: string, logName: string) {
-    if (!fs.existsSync(join(__dirname, '..', '..', '..', 'logs'))) {
+    if (!fs.existsSync(join(process.cwd(), 'logs'))) {
       console.log(1);
-      fs.mkdirSync(join(__dirname, '..', '..', '..', 'logs'));
+      fs.mkdirSync(join(process.cwd(), 'logs'));
     }
-    fs.appendFileSync(
-      join(__dirname, '..', '..', '..', 'logs', logName),
-      message,
-    );
+    fs.appendFileSync(join(process.cwd(), 'logs', logName), message);
   }
 }
