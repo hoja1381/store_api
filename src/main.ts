@@ -5,7 +5,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { TransformBigint } from './common/interceptor/transform_bigint.interceptor';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import { GlobalExceptionFilter } from './common/filter/global_exception.filter';
 
 const cookieSession = require('cookie-session');
 
@@ -13,12 +12,8 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-
   app.use(cookieSession({ keys: [process.env.COOKIE_SESSION_KEY] }));
-
   app.useGlobalInterceptors(new TransformBigint());
-  app.useGlobalFilters(new GlobalExceptionFilter());
-
   app.useStaticAssets(join(__dirname, '..', 'images'), { prefix: '/images/' });
 
   const config = new DocumentBuilder()
