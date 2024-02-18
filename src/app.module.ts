@@ -10,6 +10,10 @@ import { ImageModule } from './image/image_providor/image.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 import { RedisModule } from './common/redis/redis.module';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggerInterceptor } from './common/interceptor/logger.interceptor';
+import { GlobalExceptionFilter } from './common/filter/global_exception.filter';
+import { CustomLoggerService } from './common/logger/logger.service';
 
 @Module({
   imports: [
@@ -24,7 +28,17 @@ import { RedisModule } from './common/redis/redis.module';
     OrderModule,
   ],
   controllers: [ImageController],
-  providers: [],
+  providers: [
+    CustomLoggerService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggerInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
+    },
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
