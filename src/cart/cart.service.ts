@@ -60,6 +60,13 @@ export class CartService {
     if (!data || !user_id)
       throw new BadRequestException('product IDs and userId must be provided.');
 
+    const productIds = new Set<number>();
+    for (const product of data.products) {
+      if (productIds.has(product.productId)) {
+        throw new BadRequestException('Duplicate product IDs are not allowed.');
+      }
+      productIds.add(product.productId);
+    }
     const products = data.products?.map((product) => {
       return product;
     });
