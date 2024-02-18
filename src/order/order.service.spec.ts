@@ -4,14 +4,16 @@ import { DatabaseRepo } from '../common/database/database.service';
 import { CartService } from '../cart/cart.service';
 import { ProductService } from '../product/product.service';
 import { Cart, Order, User } from '@prisma/client';
-import { CreateCartDto } from 'src/cart/dto/create-card.dto';
+import { CreateCartDto } from '../cart/dto/create-card.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { UserService } from '../user/service/user.service';
 
 describe('OrderService', () => {
   let service: OrderService;
 
   let databaseRepo: DatabaseRepo;
   let cartService: CartService;
+  let userService: UserService;
 
   let testCart: Cart;
   let user: User;
@@ -20,15 +22,24 @@ describe('OrderService', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [OrderService, DatabaseRepo, CartService, ProductService],
+      providers: [
+        OrderService,
+        DatabaseRepo,
+        CartService,
+        ProductService,
+        UserService,
+      ],
     }).compile();
 
     cartService = module.get<CartService>(CartService);
     databaseRepo = module.get<DatabaseRepo>(DatabaseRepo);
+    userService = module.get<UserService>(UserService);
 
     service = module.get<OrderService>(OrderService);
 
-    user = { id: 2 } as User;
+    const users = await userService.findAll();
+    user = users[0];
+
     testCart = await cartService.create(
       {
         products: [

@@ -2,44 +2,53 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CartService } from './cart.service';
 import { DatabaseRepo } from '../common/database/database.service';
 import { ProductService } from '../product/product.service';
+import { UserService } from '../user/service/user.service';
 
 describe('CardService', () => {
   let service: CartService;
   let repo: DatabaseRepo;
   let productService: ProductService;
+  let userService: UserService;
+
+  let testUserId: number;
+  let data: any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CartService, DatabaseRepo, ProductService],
+      providers: [CartService, DatabaseRepo, ProductService, UserService],
     }).compile();
 
+    userService = module.get<UserService>(UserService);
     productService = module.get<ProductService>(ProductService);
     repo = module.get<DatabaseRepo>(DatabaseRepo);
     service = module.get<CartService>(CartService);
+
+    const users = await userService.findAll();
+    testUserId = users[0].id;
+    const products = (await productService.findAll()).products;
+
+    data = {
+      products: [
+        {
+          productId: products[0].id,
+          productQty: 1,
+        },
+        {
+          productId: products[1].id,
+          productQty: 1,
+        },
+      ],
+    };
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  const testUserId = 2;
-  const data = {
-    products: [
-      {
-        productId: 1,
-        productQty: 1,
-      },
-      {
-        productId: 2,
-        productQty: 1,
-      },
-    ],
-  };
-
   let cartId: number;
   let cart;
 
-  it('( create )-should return the created product.', async () => {
+  it('( create )-should return the created cart.', async () => {
     cart = await service.create(data, testUserId);
     cartId = cart.id;
 
