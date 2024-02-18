@@ -6,6 +6,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
 } from '@nestjs/swagger';
 
 export const CreateOrderDoc = () => {
@@ -70,6 +71,7 @@ export const FindOneOrderDoc = () => {
     ApiOperation({
       summary: 'return order with the given id.',
     }),
+    ApiParam({ name: 'id', required: true }),
     ApiOkResponse({
       description: 'return order with the given id.',
     }),

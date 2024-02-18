@@ -45,6 +45,7 @@ export const FindOneProductDoc = () => {
     ApiOperation({
       summary: 'find one product with the given id.',
     }),
+    ApiParam({ name: 'id', required: true }),
     ApiOkResponse({
       description: 'return the product with the given id. with its images.',
     }),
