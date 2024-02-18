@@ -3,11 +3,16 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
+  Injectable,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { CustomLoggerService } from '../logger/logger.service';
 
 @Catch()
+@Injectable()
 export class GlobalExceptionFilter implements ExceptionFilter {
+  constructor(private logger: CustomLoggerService) {}
+
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
@@ -15,6 +20,12 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
+
+      this.logger.error(
+        `${exception.getStatus()} - err: ${exception.name} - message: ${exception.message}`,
+        'err-logs',
+      );
+
       return res.status(status).json({
         data: exception.getResponse(),
         date: new Date().toISOString(),
@@ -22,7 +33,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       });
     }
 
-    console.log(exception);
+    this.logger.warn(`${req.path} =>  ${exception}`, 'err-logs');
 
     res.status(500).json({
       statusCode: 500,
