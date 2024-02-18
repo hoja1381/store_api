@@ -33,11 +33,11 @@ describe('CardService', () => {
     testUserId = testUser.id;
 
     const product1 = await productService.create({
-      name: 'test-p1',
+      name: 'testCart-p1',
       price: 1000,
     } as CreateProductDto);
     const product2 = await productService.create({
-      name: 'test-p2',
+      name: 'testCart-p2',
       price: 1000,
     } as CreateProductDto);
 

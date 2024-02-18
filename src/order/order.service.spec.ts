@@ -50,11 +50,11 @@ describe('OrderService', () => {
     } as Prisma.UserCreateInput);
 
     product1 = await productService.create({
-      name: 'test-p1',
+      name: 'testOrder-p1',
       price: 1000,
     } as CreateProductDto);
     product2 = await productService.create({
-      name: 'test-p2',
+      name: 'testOrder-p2',
       price: 1000,
     } as CreateProductDto);
 
