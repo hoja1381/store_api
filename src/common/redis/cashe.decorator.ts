@@ -20,7 +20,6 @@ export const Cache =
       }
       const result = await func.apply(this, args);
 
-      // Check if the result is not null or an empty array before caching
       if (result !== null && !(Array.isArray(result) && result.length === 0)) {
         await cacheService.set(cacheKey, result, ttl);
       }
