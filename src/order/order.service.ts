@@ -9,7 +9,6 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { DatabaseRepo } from '../common/database/database.service';
 import { CartService } from '../cart/cart.service';
 import { User } from '@prisma/client';
-import { Cache } from '../common/redis/cashe.decorator';
 
 @Injectable()
 export class OrderService {
